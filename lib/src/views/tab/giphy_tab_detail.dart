@@ -175,7 +175,7 @@ class _GiphyTabDetailState extends State<GiphyTabDetail> {
                         ),
                         items: [
                           if (gif.username != null && gif.username.isNotEmpty)
-                            MenuItem("More ${gif.username}", () {
+                            MenuItem("More @${gif.username}", () {
                               _appBarProvider.queryText = gif.username;
                             }),
                         ],
