@@ -1,4 +1,5 @@
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -160,16 +161,31 @@ class _GiphyTabDetailState extends State<GiphyTabDetail> {
                             (_gifWidth /
                                 double.parse(gif.images.fixedWidth.width)),
                       ),
-                      LoadState.completed: ExtendedRawImage(
-                        image: state.extendedImageInfo?.image,
-                        width: _gifWidth,
-                        height: double.parse(gif.images.fixedWidth.height) *
-                            (_gifWidth /
-                                double.parse(gif.images.fixedWidth.width)),
-                        fit: widget.type == GiphyType.gifs
-                            ? BoxFit.fill
-                            : BoxFit.fitWidth,
-                      ),
+                      LoadState.completed: CupertinoContextMenu(
+                          child: ExtendedRawImage(
+                            image: state.extendedImageInfo?.image,
+                            width: _gifWidth,
+                            height: double.parse(gif.images.fixedWidth.height) *
+                                (_gifWidth /
+                                    double.parse(gif.images.fixedWidth.width)),
+                            fit: widget.type == GiphyType.gifs
+                                ? BoxFit.fill
+                                : BoxFit.fitWidth,
+                          ),
+                          actions: <Widget>[
+                            CupertinoContextMenuAction(
+                              child: const Text('Action one'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            CupertinoContextMenuAction(
+                              child: const Text('Action two'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ]),
                       LoadState.failed: Container(
                         color: Theme.of(context).cardColor,
                         width: _gifWidth,
