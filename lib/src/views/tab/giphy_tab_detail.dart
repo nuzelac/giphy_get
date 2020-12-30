@@ -9,6 +9,7 @@ import 'package:giphy_get/src/client/models/gif.dart';
 import 'package:giphy_get/src/client/models/type.dart';
 import 'package:giphy_get/src/providers/app_bar_provider.dart';
 import 'package:giphy_get/src/providers/tab_provider.dart';
+import 'package:menu/menu.dart';
 import 'package:provider/provider.dart';
 
 class GiphyTabDetail extends StatefulWidget {
@@ -161,25 +162,25 @@ class _GiphyTabDetailState extends State<GiphyTabDetail> {
                             (_gifWidth /
                                 double.parse(gif.images.fixedWidth.width)),
                       ),
-                      LoadState.completed: CupertinoContextMenu(
-                          child: ExtendedRawImage(
-                            image: state.extendedImageInfo?.image,
-                            width: _gifWidth,
-                            height: double.parse(gif.images.fixedWidth.height) *
-                                (_gifWidth /
-                                    double.parse(gif.images.fixedWidth.width)),
-                            fit: widget.type == GiphyType.gifs
-                                ? BoxFit.fill
-                                : BoxFit.fitWidth,
-                          ),
-                          actions: <Widget>[
-                            CupertinoContextMenuAction(
-                              child: Text('More @${gif.username}'),
-                              onPressed: () {
-                                _appBarProvider.queryText = gif.username;
-                              },
-                            ),
-                          ]),
+                      LoadState.completed: Menu(
+                        child: ExtendedRawImage(
+                          image: state.extendedImageInfo?.image,
+                          width: _gifWidth,
+                          height: double.parse(gif.images.fixedWidth.height) *
+                              (_gifWidth /
+                                  double.parse(gif.images.fixedWidth.width)),
+                          fit: widget.type == GiphyType.gifs
+                              ? BoxFit.fill
+                              : BoxFit.fitWidth,
+                        ),
+                        items: [
+                          if (gif.username != null && gif.username.isNotEmpty)
+                            MenuItem("More ${gif.username}", () {
+                              _appBarProvider.queryText = gif.username;
+                            }),
+                        ],
+                        decoration: MenuDecoration(),
+                      ),
                       LoadState.failed: Container(
                         color: Theme.of(context).cardColor,
                         width: _gifWidth,
