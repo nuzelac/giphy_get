@@ -174,15 +174,9 @@ class _GiphyTabDetailState extends State<GiphyTabDetail> {
                           ),
                           actions: <Widget>[
                             CupertinoContextMenuAction(
-                              child: const Text('Action one'),
+                              child: Text('More @${gif.username}'),
                               onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            CupertinoContextMenuAction(
-                              child: const Text('Action two'),
-                              onPressed: () {
-                                Navigator.pop(context);
+                                _appBarProvider.queryText = gif.username;
                               },
                             ),
                           ]),
