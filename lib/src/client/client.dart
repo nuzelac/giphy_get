@@ -6,7 +6,6 @@ import 'package:giphy_get/src/client/models/languages.dart';
 import 'package:giphy_get/src/client/models/rating.dart';
 import 'package:giphy_get/src/client/models/type.dart';
 import 'package:http/http.dart';
-import 'package:meta/meta.dart';
 
 import 'models/collection.dart';
 
@@ -14,14 +13,13 @@ class GiphyClient {
   static final baseUri = Uri(scheme: 'https', host: 'api.giphy.com');
 
   final String _apiKey;
-  final Client _client;
+  final Client _client = Client();
   final String _random_id;
   final String _apiVersion = 'v1';
 
-  GiphyClient({@required String apiKey, Client client, String randomId})
+  GiphyClient({required String apiKey, required String randomId})
       : _apiKey = apiKey,
-        _random_id = randomId ?? '',
-        _client = client ?? Client();
+        _random_id = randomId;
 
   Future<GiphyCollection> trending({
     int offset = 0,
@@ -85,7 +83,7 @@ class GiphyClient {
   }
 
   Future<GiphyGif> random({
-    String tag,
+    required String tag,
     String rating = GiphyRating.g,
     String type = GiphyType.gifs,
   }) async {
@@ -127,15 +125,12 @@ class GiphyClient {
   }
 
   Future<Response> _getWithAuthorization(Uri uri) async {
-    final response = await _client.get(
-      uri
-          .replace(
-            queryParameters: Map<String, String>.from(uri.queryParameters)
-              ..putIfAbsent('api_key', () => _apiKey)
-              ..putIfAbsent('random_id', () => _random_id),
-          )
-          .toString(),
-    );
+    Map<String, String> queryParams = Map.from(uri.queryParameters)
+      ..putIfAbsent('api_key', () => _apiKey)
+      ..putIfAbsent('random_id', () => _random_id);
+
+    final response =
+        await _client.get(uri.replace(queryParameters: queryParams));
 
     if (response.statusCode == 200) {
       return response;
